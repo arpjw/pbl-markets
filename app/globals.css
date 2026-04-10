@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { -webkit-font-smoothing: antialiased; }
+  body { @apply bg-pbl-bg text-pbl-cream font-sans; }
+}
+
+@layer components {
+  .card { @apply bg-pbl-card border border-pbl-border rounded-xl; }
+  .card-hover { @apply transition-colors hover:bg-pbl-card-2 hover:border-pbl-border-2; }
+  .btn-primary { @apply bg-pbl-maroon hover:bg-pbl-maroon-2 text-pbl-cream text-sm font-medium rounded-lg px-4 py-2 transition-colors disabled:opacity-30 disabled:cursor-not-allowed; }
+  .pill-yes { @apply rounded-lg px-4 py-3 transition-all cursor-pointer border text-pbl-orange; }
+  .pill-yes.active { @apply bg-pbl-orange border-pbl-orange text-white; }
+  .pill-no { @apply rounded-lg px-4 py-3 transition-all cursor-pointer border text-red-400; }
+  .pill-no.active { @apply bg-red-700 border-red-700 text-white; }
+  .input { @apply w-full bg-pbl-bg border border-pbl-border rounded-lg px-3 py-2 text-sm text-pbl-cream placeholder-pbl-faint focus:outline-none focus:ring-1 focus:ring-pbl-maroon focus:border-pbl-maroon transition-all; }
+}
+
+.prob-bar { transition: width 0.55s cubic-bezier(0.4, 0, 0.2, 1); }
