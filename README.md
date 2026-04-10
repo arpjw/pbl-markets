@@ -251,12 +251,12 @@ Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` as environmen
 
 ## Built by
 
-[Arya Somu](https://github.com/arpjw) — Founder & CIO of [Monolith Systematic LLC](https://monolithsystematic.com), VP Strategy & Development at De Anza Phi Beta Lambda, incoming Summer Researcher at Stanford's Advanced Financial Technologies Laboratory.
+[Arya Somu](https://github.com/arpjw) — Founder & CIO of [Monolith Systematic LLC](https://monolithsystematic.com), VP Strategy & Development at [De Anza Phi Beta Lambda](https://www.instagram.com/deanzapbl/).
 
-Built in a single session as a production tool for the 80+ member PBL chapter and as a portfolio project demonstrating applied full-stack systems design.
+Built as a production tool for the 100+ member De Anza PBL chapter and as a personal portfolio project demonstrating applied full-stack systems design.
 
 ---
 
 ## License
 
-MIT — built for De Anza Phi Beta Lambda, Spring 2026.
+MIT — built for [De Anza Phi Beta Lambda](https://www.instagram.com/deanzapbl/), Spring 2026.
