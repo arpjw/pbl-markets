@@ -13,9 +13,11 @@
 *Members trade virtual PBL points on real chapter outcomes. Probabilities shift in real time as bets flow in. Markets resolve with automatic parimutuel payouts.*
 
 ---
-
-<!-- Screenshots -->
-<!-- Add screenshots here after deployment -->
+<img width="1920" height="948" alt="Screenshot 2026-04-09 at 5 49 50 PM" src="https://github.com/user-attachments/assets/290937d7-57de-49fb-bf1c-18f6e5c5c846" />
+<img width="1920" height="948" alt="Screenshot 2026-04-09 at 5 50 29 PM" src="https://github.com/user-attachments/assets/6ca499b3-8d6e-4326-8367-50817e71936e" />
+<img width="1920" height="948" alt="Screenshot 2026-04-09 at 5 50 48 PM" src="https://github.com/user-attachments/assets/2d734624-420c-4f62-add9-885941357673" />
+<img width="1920" height="948" alt="Screenshot 2026-04-09 at 5 51 02 PM" src="https://github.com/user-attachments/assets/5a64bdb5-0258-4795-9013-b72316920e14" />
+<img width="1920" height="948" alt="Screenshot 2026-04-09 at 5 51 14 PM" src="https://github.com/user-attachments/assets/e88af5a1-685b-4a97-92ef-ece476994100" />
 
 </div>
 
