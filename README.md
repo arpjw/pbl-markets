@@ -1,58 +1,179 @@
+<div align="center">
+
 # PBL Markets
 
-A full-stack prediction market platform built for De Anza College's Phi Beta Lambda chapter. Members trade virtual PBL points on chapter outcomes — competitions, events, growth targets, and operations. Probabilities shift in real time as bets flow in, markets are resolved by admins, and payouts distribute automatically.
+**A production-grade prediction market platform built for De Anza College's Phi Beta Lambda chapter.**
 
-Built as a showcase project demonstrating systematic thinking applied to community tooling.
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=flat-square&logo=supabase&logoColor=white)](https://supabase.com)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![Vercel](https://img.shields.io/badge/Deployed-Vercel-black?style=flat-square&logo=vercel)](https://vercel.com)
+
+*Members trade virtual PBL points on real chapter outcomes. Probabilities shift in real time as bets flow in. Markets resolve with automatic parimutuel payouts.*
+
+---
+
+<!-- Screenshots -->
+<!-- Add screenshots here after deployment -->
+
+</div>
+
+---
+
+## Overview
+
+PBL Markets is a full-stack prediction market platform inspired by [Kalshi](https://kalshi.com), purpose-built for the 80+ member De Anza Phi Beta Lambda chapter. It surfaces collective intelligence about chapter outcomes — competitions, events, growth targets, and operations — through market-based probability aggregation.
+
+Members receive 1,000 starting points and trade on markets like *"Will De Anza PBL place Top 3 at NLC Las Vegas?"* or *"Will the April 21 Shark Tank event draw 20+ new member signups?"* Each trade shifts the probability and records a price point, building a full probability history that populates the live charts.
+
+The platform doubles as a chapter engagement tool: the leaderboard creates competitive motivation, the trading mechanics teach prediction market intuition, and market resolution events generate natural discussion around chapter outcomes.
 
 ---
 
 ## Features
 
-| Feature | Details |
-|---|---|
-| Magic link auth | No passwords — members sign in via email link |
-| Parimutuel markets | Probability-weighted pools with automatic payout calculation |
-| Live probability charts | Recharts area chart with 1D / 1W / ALL time filtering |
-| Hero market | Featured market with inline betting on the homepage |
-| Trending sidebar | Volume-ranked markets, closing soon, your positions |
-| Portfolio tracker | Open positions, unrealized P&L, settled history |
-| Leaderboard | Podium + full member rankings, live balance updates |
-| Profile page | Display name editing, stats, recent activity |
-| Admin dashboard | Create markets, resolve outcomes, manage members, adjust balances |
-| Price history | Every trade records a price point — charts populate automatically |
-| Loading skeletons | Pulse skeleton states on all data-heavy pages |
-| RLS security | Row-level security on all Supabase tables |
+**Markets**
+- Parimutuel binary markets with automatic probability calculation
+- Hero market with featured chart on the browse page
+- Category filtering (Competition, Events, Growth, Operations)
+- Market detail page with full-width probability history chart + 1D / 1W / ALL time filtering
+- Outcomes table with payout multipliers and probability bars
+- Trade history per market with member avatars and roles
+
+**Trading**
+- YES / NO position selection with probability display
+- Preset amounts (10, 25, 50, 100 pts) + custom input
+- Real-time payout preview before placing
+- Inline betting on the hero market — no page navigation required
+- Full transaction log per user
+
+**Social**
+- Live leaderboard with podium display for top 3 traders
+- Trending sidebar ranked by volume with probability change indicators
+- Closing soon section for time-sensitive markets
+- Portfolio tracker with unrealized P&L per position
+- Profile page with display name, role, stats, and recent activity
+
+**Admin**
+- Create markets with seeded opening pools to set initial probability
+- Resolve markets YES or NO — payouts distribute automatically to all winners
+- Member management with admin promotion and manual balance adjustment
+- Full member roster pre-loaded from re-enrollment form data
+
+**Infrastructure**
+- Magic link auth — no passwords, members sign in with email
+- Row-level security on all database tables
+- Price history recorded on every trade for chart population
+- 7-day seed data generated on migration for instant chart coverage
+- Loading skeleton states on all data-heavy pages
+- Custom 404 page with PBL branding
+- OG meta tags on market pages for Discord / social previews
 
 ---
 
 ## Stack
 
-| Layer | Tech |
-|---|---|
-| Framework | Next.js 16 (App Router, Server Components) |
-| Language | TypeScript |
-| Styling | Tailwind CSS with custom PBL design system |
-| Auth | Supabase Auth (magic links) |
-| Database | Supabase (PostgreSQL) |
-| Realtime | Supabase Realtime |
-| Charts | Recharts |
-| Deployment | Vercel |
+| Layer | Technology | Purpose |
+|---|---|---|
+| Framework | Next.js 16 (App Router) | Server components, API routes, file-based routing |
+| Language | TypeScript 5 | End-to-end type safety |
+| Styling | Tailwind CSS | Custom PBL dark design system |
+| Auth | Supabase Auth | Magic link email authentication |
+| Database | Supabase (PostgreSQL) | Markets, positions, profiles, price history |
+| Security | Supabase RLS | Row-level security on all tables |
+| Charts | Recharts | Probability history area charts |
+| Deployment | Vercel | Edge-optimized deployment |
+
+---
+
+## Market Mechanics
+
+PBL Markets implements **parimutuel pricing** — the same model used in horse racing and prediction pools:
+
+```
+YES payout multiplier = (yes_pool + no_pool) / yes_pool
+If YES resolves: payout = multiplier × your_bet
+```
+
+Every trade shifts the implied probability:
+
+```
+P(YES) = yes_pool / (yes_pool + no_pool)
+```
+
+Markets are seeded with equal YES/NO liquidity to set the opening probability. After seeding, all probability movement is driven purely by member trading. Early correct bettors receive higher multipliers than late ones — the platform rewards conviction.
+
+On resolution, the admin selects YES or NO. The system calculates each winner's payout, updates all balances atomically, and logs transactions for the full audit trail.
+
+---
+
+## Database Schema
+
+```sql
+profiles          — extends auth.users, stores balance, role, is_admin
+markets           — title, category, yes_pool, no_pool, closes_at, resolved, outcome
+positions         — user_id, market_id, side, amount (immutable bet records)
+transactions      — full ledger: bets (-), payouts (+), admin adjustments
+market_price_history — market_id, yes_prob, recorded_at (one row per trade)
+```
+
+All tables have Row Level Security enabled. Authenticated users can read all markets, positions, and profiles. Users can only insert their own positions and transactions. Only admins can create or update markets.
 
 ---
 
 ## Design System
 
-Colors derived from the official Phi Beta Lambda De Anza Brand Identity & Standards Manual (v1.3):
+Built from the official Phi Beta Lambda De Anza Brand Identity & Standards Manual (v1.3):
 
 ```
-#790000  PBL Maroon    — primary brand, logomark
-#FA4E1D  Orange-red    — YES probability, accents
-#FF983A  Warm orange   — tertiary, warnings
-#0E0B0B  Background    — near-black with warm tint
-#F9F8F6  Cream         — primary text
+#790000  PBL Maroon     — primary brand, Φ logomark, admin accents
+#FA4E1D  Orange-red     — YES probability, featured highlights  
+#FF983A  Warm orange    — tertiary, closing soon indicators
+#0E0B0B  Background     — near-black with warm maroon undertone
+#F9F8F6  Cream          — primary text on dark surfaces
 ```
 
-Typography: Georgia (serif, brand marks) + Inter (sans-serif, UI).
+Typography: **Georgia** (serif) for brand marks and the Φ logomark — **Inter** (sans-serif) for all UI elements. The nav features the official Φ mark in brand maroon, consistent with PBL's logomark usage standards.
+
+---
+
+## Architecture
+
+```
+pbl-markets/
+├── app/
+│   ├── auth/login/              Magic link sign-in page
+│   ├── auth/callback/           Supabase auth exchange handler
+│   ├── markets/                 Browse page: hero + grid + trending sidebar
+│   ├── markets/[id]/            Detail page: chart + outcomes + trade history + bet panel
+│   ├── portfolio/               Open positions, P&L, settled history, transactions
+│   ├── leaderboard/             Podium + full member rankings
+│   ├── profile/                 Display name, stats, recent activity
+│   ├── admin/                   Market creation, resolution, member management
+│   └── api/
+│       ├── bet/                 Place bet: validates, updates pools, records price history
+│       ├── admin/markets/       Create market with seed pools
+│       ├── admin/resolve/       Resolve market and distribute payouts atomically
+│       └── profile/             Update display name
+├── components/
+│   ├── Nav                      Sticky nav with balance, profile link, admin access
+│   ├── HeroMarket               Featured market: two-column with inline betting + live chart
+│   ├── MarketCard               Kalshi-style card: probability bars + compact pills
+│   ├── MarketDetailChart        Time-filtered price chart (client, 1D/1W/ALL)
+│   ├── PriceChart               Recharts AreaChart with custom tooltip and gradient fill
+│   ├── BetPanel                 YES/NO selection, preset amounts, payout preview
+│   ├── TrendingSidebar          Trending · Closing Soon · Your Positions
+│   └── ProfileForm              Client-side display name editing
+├── lib/
+│   ├── supabase/client.ts       Browser client (createBrowserClient)
+│   ├── supabase/server.ts       Server client (createServerClient + cookie handler)
+│   └── types.ts                 Interfaces + parimutuel math utilities
+└── supabase/
+    ├── schema.sql               Full schema: tables, indexes, RLS, auto-profile trigger
+    ├── seed.sql                 7 PBL markets + member name UPDATE statements
+    └── add_price_history.sql    Price history table + 7-day random walk seed
+```
 
 ---
 
@@ -78,25 +199,25 @@ cp .env.local.example .env.local
 
 Fill in your credentials from Supabase → Project Settings → API:
 
-```
-NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 ```
 
-### 4. Run database migrations
+### 4. Run migrations
 
-In Supabase → SQL Editor, run these in order:
+In Supabase → SQL Editor, run in order:
 
 1. `supabase/schema.sql` — tables, RLS policies, auto-profile trigger
-2. `supabase/add_price_history.sql` — price history table + 7-day seed data
+2. `supabase/add_price_history.sql` — price history table + 7-day seed
 
 ### 5. Configure auth
 
-In Supabase → Authentication → URL Configuration:
+Supabase → Authentication → URL Configuration:
 - Site URL: `http://localhost:3000`
 - Redirect URLs: `http://localhost:3000/auth/callback`
 
-Authentication → Providers → Email → **"Confirm email" OFF**
+Authentication → Providers → Email → **Confirm email: OFF**
 
 ### 6. Start dev server
 
@@ -104,7 +225,7 @@ Authentication → Providers → Email → **"Confirm email" OFF**
 npm run dev
 ```
 
-Navigate to `localhost:3000`, sign in with your email, then make yourself admin:
+Sign in at `localhost:3000`, then make yourself admin:
 
 ```sql
 UPDATE public.profiles
@@ -112,61 +233,25 @@ SET is_admin = true, full_name = 'Your Name', role = 'Your Role'
 WHERE email = 'your@email.com';
 ```
 
-Then run `supabase/seed.sql` in the SQL editor to seed 7 markets.
+Run `supabase/seed.sql` to create the 7 default markets with seeded price history.
 
 ---
 
-## Architecture
-
-```
-pbl-markets/
-├── app/
-│   ├── auth/           Magic link login + callback handler
-│   ├── markets/        Browse markets (homepage) + [id] detail page
-│   ├── portfolio/      User positions, P&L, transaction history
-│   ├── leaderboard/    Member rankings
-│   ├── profile/        Display name + stats
-│   ├── admin/          Market creation, resolution, member management
-│   └── api/            Server-side API routes (bet, resolve, profile)
-├── components/
-│   ├── Nav             Sticky top navigation
-│   ├── HeroMarket      Featured market with live chart + inline betting
-│   ├── MarketCard      Kalshi-style grid card with probability bars
-│   ├── MarketDetailChart  Time-filtered price history chart
-│   ├── PriceChart      Recharts AreaChart wrapper
-│   ├── BetPanel        YES/NO betting UI
-│   ├── TrendingSidebar Trending / closing soon / your positions
-│   └── ProfileForm     Display name editing
-├── lib/
-│   ├── supabase/       Browser + server Supabase clients
-│   └── types.ts        TypeScript interfaces + parimutuel math helpers
-└── supabase/
-    ├── schema.sql      Full database schema with RLS
-    ├── seed.sql        7 PBL markets + member name update queries
-    └── add_price_history.sql  Price history table + 7-day seed
-```
-
----
-
-## Market Mechanics
-
-PBL Markets uses **parimutuel pricing**:
-
-- Each market has a YES pool and a NO pool seeded with equal liquidity
-- When you bet X pts on YES: `payout = (total_pool / yes_pool) × X`
-- Early correct bettors earn better returns than late ones
-- Admins resolve markets; payouts distribute automatically to all winners
-- Every trade records a `(market_id, yes_prob, timestamp)` point for charting
-
----
-
-## Deploying to Production
+## Deployment
 
 ```bash
 npx vercel
 ```
 
-Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in Vercel dashboard. Update Supabase URL Configuration to include your Vercel domain.
+Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` as environment variables in the Vercel dashboard. Update Supabase URL Configuration to include your Vercel domain.
+
+---
+
+## Built by
+
+[Arya Somu](https://github.com/arpjw) — Founder & CIO of [Monolith Systematic LLC](https://monolithsystematic.com), VP Strategy & Development at De Anza Phi Beta Lambda, incoming Summer Researcher at Stanford's Advanced Financial Technologies Laboratory.
+
+Built in a single session as a production tool for the 80+ member PBL chapter and as a portfolio project demonstrating applied full-stack systems design.
 
 ---
 
